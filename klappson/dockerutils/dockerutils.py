@@ -23,13 +23,32 @@ class UserConfig:
 
 
 class ContainerSetup:
-    def __init__(self):
+    def __init__(self, container_name):
+        self.container_name = container_name
         self.default_config_dir = "/root/default_configs"
+        self.user_config_dir = "/vol/config"
 
         self.mount_dirs: list[str] = []
         self.symlinks: list[UserConfig] = []
         self.programs: list[list[str]] = []
         self.program_threads: list[threading.Thread] = []
+
+    def generate_userconfigs(self):
+        retu = []
+
+        for tup in os.walk(self.default_config_dir):
+            for file in tup[2]:
+                default_path = os.path.join(tup[0], file)
+                rel_path = default_path[len(self.default_config_dir):]
+                user_copy = os.path.join(self.user_config_dir, rel_path)
+
+                retu.append(UserConfig(
+                    default=default_path,
+                    user_copy=user_copy,
+                    symlink=os.path.join('/', rel_path)
+                ))
+
+        return retu
     
     def _run_programms(self, start_delay=3):
         '''Start calling programms defined in self.programs
