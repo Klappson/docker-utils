@@ -48,6 +48,7 @@ class ContainerSetup:
             )
 
             self.program_threads.append(thr)
+            thr.start()
             sleep(start_delay)
     
     def _create_dirs(self):
@@ -68,10 +69,8 @@ class ContainerSetup:
 
         for symlink in self.symlinks:
             print((
-                '[CONTAINERSETUP/SYMLINKS]\t'
-                f'{symlink.default} -> '
-                f'{symlink.user_copy} -> '
-                f'{symlink.symlink}'))
+                f'[CONTAINERSETUP/SYMLINKS]\t{symlink.default} -> '
+                f'{symlink.user_copy} -> {symlink.symlink}'))
             symlink.remove_symlink()
             symlink.copy_default()
             symlink.create_symlink()
