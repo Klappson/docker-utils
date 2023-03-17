@@ -16,9 +16,13 @@ class UserConfig:
     
     def copy_default(self):
         if not os.path.isfile(self.user_copy):
+            par_dir = os.path.dirname(self.user_copy)
+            subprocess.run(['mkdir', '-p', par_dir])
             subprocess.run(['cp', self.default, self.user_copy])
     
     def create_symlink(self):
+        par_dir = os.path.dirname(self.symlink)
+        subprocess.run(['mkdir', '-p', self.symlink])
         subprocess.run(['ln', '-s', self.user_copy, self.symlink])
 
 
