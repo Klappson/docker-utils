@@ -104,6 +104,7 @@ class ContainerSetup:
     def setup(self):
         ContainerSetup._print_networkinfo()
 
+        self.mount_dirs.append(self.user_config_dir)
         self._create_dirs()
         self._create_symlinks()
         self._run_programms()
