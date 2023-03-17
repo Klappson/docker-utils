@@ -48,6 +48,10 @@ class ContainerSetup:
                     symlink=os.path.join('/', rel_path)
                 ))
 
+                print((
+                    f"Auto-Generated UserConfig {default_path} → {user_copy} → "
+                    f"{os.path.join('/', rel_path)}"))
+
         return retu
     
     def _run_programms(self, start_delay=3):
