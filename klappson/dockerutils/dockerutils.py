@@ -26,7 +26,7 @@ class UserConfig:
     
     def create_symlink(self):
         par_dir = os.path.dirname(self.symlink)
-        subprocess.run(['mkdir', '-p', self.symlink])
+        subprocess.run(['mkdir', '-p', par_dir])
         subprocess.run(['ln', '-s', self.user_copy, self.symlink])
 
 
@@ -61,7 +61,7 @@ class ContainerSetup:
                 )
                 retu.append(usco)
 
-                print((f"Auto-Generated UserConfig {usco}"))
+                print((f"Auto-Generated UserConfig {usco.ident_string()}"))
 
         return retu
     
