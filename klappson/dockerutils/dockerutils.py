@@ -48,6 +48,10 @@ class ContainerSetup:
             for file in tup[2]:
                 default_path = os.path.join(tup[0], file)
                 rel_path = default_path[len(self.default_config_dir):]
+
+                while rel_path[1] == '/':
+                    rel_path = rel_path[1:]
+
                 user_copy = os.path.join(self.user_config_dir, rel_path)
 
                 usco = UserConfig(
