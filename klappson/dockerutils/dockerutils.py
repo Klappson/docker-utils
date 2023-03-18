@@ -10,6 +10,10 @@ class UserConfig:
         self.user_copy = user_copy
         self.symlink = symlink
     
+    def ident_string(self):
+        return (f'{self.default} -> '
+                f'{self.user_copy} -> {self.symlink}')
+    
     def remove_symlink(self):
         if os.path.isfile(self.symlink):
             subprocess.run(['rm', '-f', self.symlink])
@@ -27,10 +31,10 @@ class UserConfig:
 
 
 class ContainerSetup:
-    def __init__(self, container_name):
-        self.container_name = container_name
+    def __init__(self, container_name: str):
+        self.container_name = container_name.replace(' ', '_')
         self.default_config_dir = "/root/default_configs"
-        self.user_config_dir = "/vol/config"
+        self.user_config_dir = f"/vol/config/{container_name}"
 
         self.mount_dirs: list[str] = []
         self.symlinks: list[UserConfig] = []
@@ -46,15 +50,14 @@ class ContainerSetup:
                 rel_path = default_path[len(self.default_config_dir):]
                 user_copy = os.path.join(self.user_config_dir, rel_path)
 
-                retu.append(UserConfig(
+                usco = UserConfig(
                     default=default_path,
                     user_copy=user_copy,
                     symlink=os.path.join('/', rel_path)
-                ))
+                )
+                retu.append(usco)
 
-                print((
-                    f"Auto-Generated UserConfig {default_path} → {user_copy} → "
-                    f"{os.path.join('/', rel_path)}"))
+                print((f"Auto-Generated UserConfig {usco}"))
 
         return retu
     
@@ -96,8 +99,7 @@ class ContainerSetup:
 
         for symlink in self.symlinks:
             print((
-                f'[CONTAINERSETUP/SYMLINKS]\t{symlink.default} -> '
-                f'{symlink.user_copy} -> {symlink.symlink}'))
+                f'[CONTAINERSETUP/SYMLINKS]\t{symlink.ident_string()}'))
             symlink.remove_symlink()
             symlink.copy_default()
             symlink.create_symlink()
